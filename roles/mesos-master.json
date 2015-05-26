@@ -1,0 +1,10 @@
+{
+  "name": "mesos-master",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "run_list": [
+    "recipe[zookeeper]",
+    "recipe[mesos::master]",
+    "recipe[marathon]"
+  ]
+}

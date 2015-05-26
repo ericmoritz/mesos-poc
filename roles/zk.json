@@ -1,0 +1,15 @@
+{
+  "name": "zk",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "override_attributes": {
+    "zookeeper": {
+      "service_style": "exhibitor"
+    }
+  },
+  "run_list": [
+    "recipe[zookeeper]",
+    "recipe[exhibitor]",
+    "recipe[exhibitor::service]"
+  ]
+}
