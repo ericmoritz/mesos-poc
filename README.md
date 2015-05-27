@@ -16,3 +16,4 @@ Start the mesos cluster:
 ```
 vagrant up mesos-master-1 mesos-slave-1
 ```
+Visit http://mesos-master-1.vagrant:5050/ to observe the status of the cluster.
