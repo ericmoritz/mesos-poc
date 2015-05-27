@@ -46,31 +46,57 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define "mesos-master-1" do |cfg|
-    cfg.vm.hostname = "mesos-master-1.vagrant"
-    cfg.vm.network "public_network", ip: "192.168.20.1"
-    cfg.vm.provision "chef_solo" do |chef|
-      chef.roles_path = "roles"
-      chef.add_role('mesos-master')
+  ["1"].each do |i| 
+    config.vm.define "mesos-master-" + i do |cfg|
+      cfg.vm.hostname = "mesos-master-" + i + ".vagrant"
+      cfg.vm.network "private_network", ip: "10.0.20.1" + i
+      
+      cfg.vm.provision "chef_solo" do |chef|
+        chef.roles_path = "roles"
+        chef.add_role('mesos-master')
+        chef.json = {
+          "mesos" => {
+            "master" => {
+              "flags" => {
+                "ip" => "10.0.20.1" + i,
+                "quorum" => 1
+              }
+            },
+            "zookeeper_exhibitor_discovery" => true,
+            "zookeeper_exhibitor_url" => "http://10.0.10.11:8080/"
+          },
+          "marathon" => {
+            "zookeeper_exhibitor_discovery" => true,
+            "zookeeper_exhibitor_url" => "http://10.0.10.11:8080/",
+            "options" => {
+              "hostname" => "10.0.20.1" + i
+            }
+          }
+        }
+      end
     end
   end
 
 
-  config.vm.define "mesos-slave-1" do |cfg|
-    cfg.vm.network "public_network", ip: "192.168.30.1"
-    cfg.vm.hostname = "mesos-slave-1.vagrant"
-    cfg.vm.provision "chef_solo" do |chef|
-      chef.roles_path = "roles"
-      chef.add_role('mesos-slave')
-      chef.json = {
-        "mesos" => {
-          "slave" => {
-            "flags" => {
-              "master" => "192.168.10.2:5050"
-            }
+  ["1"].each do |i| 
+    config.vm.define "mesos-slave-" + i do |cfg|
+      cfg.vm.hostname = "mesos-slave-" + i + ".vagrant"
+      cfg.vm.network "private_network", ip: "10.0.30.1" + i
+      cfg.vm.provision "chef_solo" do |chef|
+        chef.roles_path = "roles"
+        chef.add_role('mesos-slave')
+        chef.json = {
+          "mesos" => {
+            "slave" => {
+              "flags" => {
+                "ip" => "10.0.30.1" + i
+              }
+            },
+            "zookeeper_exhibitor_discovery" => true,
+            "zookeeper_exhibitor_url" => "http://10.0.10.11:8080/"
           }
         }
-      }
+      end
     end
-  end  
+  end
 end

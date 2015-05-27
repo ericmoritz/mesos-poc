@@ -1,5 +1,6 @@
 source 'https://supermarket.getchef.com'
 
-cookbook 'mesos', path: '../mesos_cookbook/'
-cookbook 'exhibitor', '~> 0.4.0'
-cookbook 'zookeeper', '~> 2.6.0'
+cookbook 'exhibitor', git: 'git@github.com:GannettDigital/chef-exhibitor.git'
+cookbook 'zookeeper', git: 'git@github.com:GannettDigital/chef-zookeeper.git'
+cookbook 'mesos', path: '../chef-mesos/'
+cookbook 'marathon', path: '../chef-marathon/'
